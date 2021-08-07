@@ -1,0 +1,3 @@
+#+TITLE: common-app-highlight-web
+
+Web implementation of [[https://github.com/jakebox/common-app-highlight]].

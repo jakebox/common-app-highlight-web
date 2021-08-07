@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+		<style>
+		 html {
+             height: 100vh;
+             font-size: 100%;
+         }
+
+		 body {
+			 color: #000000;
+			 font-family: Times New Roman;
+             padding-top: 4.5em;
+			 line-height: 1.4em;
+			 background: #FFFFFF;
+		 }
+
+		 .common-app-textbox
+		 {
+			 font-size: 150%;
+			 background-color: #191a1c !important;
+		 }
+
+		</style>
+
+		<title>Common App Highlight</title>
+	</head>
+	<body>
+
+		<main>
+
+			<div class="container">
+
+				<div class="mx-auto justify-content-center">
+					<div class="row align-items-end justify-content-center">
+						<div class="col-md-8 col-12">
+							<textarea class="form-control common-app-textbox" id="mainTextbox" rows="6" onKeyDown="mainUpdate()"></textarea>
+						</div>
+					</div>
+					<div class="row">
+						Character Count:&nbsp;<p id="charCount"></p>
+						<input class="form-control" type="number" id="targetCharsBox" name="targetCharsBox" value="150" min="1" max="500" onKeyDown="setTargetCount()" onKeyUp="setTargetCount()">
+					</div>
+					</div>
+				</div>
+
+		</main>
+
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+		<script>
+		 var textbox = "mainTextbox"
+		 var targetbox = "targetCharsBox"
+		 var target = 150
+
+		 var colors = ["#FF8C00", "#FF9E00", "#FFD300", "#FFF600", "#35FF00", "#24FF00", "#FFD300", "#FF8C00", "#FF5700", "#FF0000"];
+		 var diffs = [50, 40, 30, 20, 15, 0, 0, 3, 5, 8, 10];
+
+ 		 function getCharCount(element) {
+			 var str = document.getElementById(element).value;
+			 var chars = str.length;
+			 return chars;
+		 }
+
+		 function updateVisualCount() {
+			 var chars = getCharCount(textbox)
+			 document.getElementById("charCount").innerHTML = chars;
+		 }
+
+		 function setTargetCount() {
+			 target = parseFloat(document.getElementById("targetCharsBox").value);
+		 }
+
+		 function calcColor() {
+			 let chrs = getCharCount(textbox);
+			 let len = colors.length;
+			 let i = 0;
+			 while (i < len) {
+				 console.log(i);
+				 if (i <= 5) {
+					 if (chrs < (target - diffs[i])) {
+						 colorText(textbox, colors[i]);
+						 i = colors.length;
+					 }
+					 else {
+						 i++; 
+					 }
+				 }
+				 else if (i == 6) {
+					 if (chrs == target) {
+						 colorText(textbox, colors[i]);
+						 i = colors.length;
+					 }
+					 else {
+						 i++;
+					 }
+				 }
+				 else {
+					 if (chrs < (target + diffs[i])) {
+						 colorText(textbox, colors[i]);
+						 i = colors.length;
+					 }
+					 else {
+						 i++;
+					 }
+				 }
+			 }
+		 }
+
+		 function colorText(element, color){
+			 var text_to_pimp = document.getElementById(element);
+			 text_to_pimp.style["color"] = color;
+		 }
+
+		 function mainUpdate() {
+			 calcColor();
+			 updateVisualCount();
+		 }
+
+		 /* function reset_text(){
+			var text_to_pimp = document.getElementById("mainTextbox");
+			text_to_pimp.style = "";
+			}
+		  */
+
+		</script>
+
+	</body>
+</html>
