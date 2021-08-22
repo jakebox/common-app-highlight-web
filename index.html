@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE HTML>
 <html lang="en">
 	<head>
 		<!-- Required meta tags -->
@@ -11,28 +11,44 @@
 		<style>
 		 html {
              height: 100vh;
-             font-size: 100%;
+             font-size: 110%;
          }
 
 		 body {
 			 color: #000000;
-			 font-family: Times New Roman;
-             padding-top: 4.5em;
+		     font-family: Roboto,-apple-system,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Open Sans,Helvetica Neue,sans-serif!important;
+             padding-top: 8vh;
 			 line-height: 1.4em;
-			 background: #FFFFFF;
+			 background: #F5F5F5;
 		 }
 
 		 .common-app-textbox
 		 {
-			 font-size: 150%;
-			 background-color: #191a1c !important;
+			 font-size: 20pt;
+			 background-color: #24272d !important;
+			 line-height: 1.5;
+			 /* outline: none !important; */
+			 /* border:1px solid black !important;
+				box-shadow: 0 0 10px #7ca029 !important; */
+		 }
+
+		 h2 {
+			 color: #1461B2;
+			 font-size: 210%;
+		 }
+
+		 h5 {
+			 display: inline;
+			 font-weight: 600;
+			 font-size: 14pt;
 		 }
 
 		</style>
 
 		<title>Common App Highlight</title>
+
 	</head>
-	<body>
+	<body onload="jakeLoadFunction()">
 
 		<main>
 
@@ -40,16 +56,25 @@
 
 				<div class="mx-auto justify-content-center">
 					<div class="row align-items-end justify-content-center">
-						<div class="col-md-8 col-12">
-							<textarea class="form-control common-app-textbox" id="mainTextbox" rows="6" onKeyDown="mainUpdate()"></textarea>
+						<h2><strong>Common App Highlight Helper</strong></h2>
+					</div>
+				</div>
+				<br>
+
+				<div class="mx-auto justify-content-center">
+					<div class="row align-items-end justify-content-center">
+						<div class="col-md-10 col-12">
+							<textarea class="form-control common-app-textbox" id="mainTextbox" placeholder="Write here" rows="5"></textarea><br><br>
 						</div>
 					</div>
 					<div class="row">
-						Character Count:&nbsp;<p id="charCount"></p>
-						<input class="form-control" type="number" id="targetCharsBox" name="targetCharsBox" value="150" min="1" max="500" onKeyDown="setTargetCount()" onKeyUp="setTargetCount()">
+						<h5>Character Count:&nbsp; </h5><span id="charCount"></span>,&nbsp;<span id="charPercent"></span>
 					</div>
+					<div class="row align-items-center">
+						<h5>Target count: &nbsp;</h5><p><input class="form-control form-control-sm" type="number" id="targetCharsBox" name="targetCharsBox" value="150" min="1" max="500" oninput="setTargetCount()"></p>
 					</div>
 				</div>
+			</div>
 
 		</main>
 
@@ -60,11 +85,14 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 		<script>
-		 var textbox = "mainTextbox"
-		 var targetbox = "targetCharsBox"
-		 var target = 150
+		 var textbox = "mainTextbox";
+		 var targetbox = "targetCharsBox";
+		 var textboxCookie = 'textboxCookie'
 
-		 var colors = ["#FF8C00", "#FF9E00", "#FFD300", "#FFF600", "#35FF00", "#24FF00", "#FFD300", "#FF8C00", "#FF5700", "#FF0000"];
+		 var target = 150;
+		 var percent = 0;
+
+		 var colors = ["#FF8C00", "#FF9E00", "#FFD300", "#FFF600", "#35FF00", "#24FF00", "#00FF00", "#FF8C00", "#FF5700", "#FF0000"];
 		 var diffs = [50, 40, 30, 20, 15, 0, 0, 3, 5, 8, 10];
 
  		 function getCharCount(element) {
@@ -74,7 +102,7 @@
 		 }
 
 		 function updateVisualCount() {
-			 var chars = getCharCount(textbox)
+			 var chars = getCharCount(textbox);
 			 document.getElementById("charCount").innerHTML = chars;
 		 }
 
@@ -82,19 +110,24 @@
 			 target = parseFloat(document.getElementById("targetCharsBox").value);
 		 }
 
+		 function calcPercent() {
+			 var chars = getCharCount(textbox);
+			 percent = String(Math.round(chars / target * 100));
+			 document.getElementById("charPercent").innerHTML = percent + "%";
+		 }
+
 		 function calcColor() {
 			 let chrs = getCharCount(textbox);
 			 let len = colors.length;
 			 let i = 0;
 			 while (i < len) {
-				 console.log(i);
 				 if (i <= 5) {
 					 if (chrs < (target - diffs[i])) {
 						 colorText(textbox, colors[i]);
 						 i = colors.length;
 					 }
 					 else {
-						 i++; 
+						 i++;
 					 }
 				 }
 				 else if (i == 6) {
@@ -118,6 +151,19 @@
 			 }
 		 }
 
+		 function jakeLoadFunction() {
+			 mainUpdate();
+			 var cookie = getCookie(textboxCookie);
+			 if (cookie != "")
+			 {
+				 document.getElementById(textbox).value = cookie
+			 }
+			 else
+			 {
+				 document.getElementById(textbox).value = ""
+			 }
+		 }
+
 		 function colorText(element, color){
 			 var text_to_pimp = document.getElementById(element);
 			 text_to_pimp.style["color"] = color;
@@ -125,14 +171,62 @@
 
 		 function mainUpdate() {
 			 calcColor();
+			 calcPercent()
 			 updateVisualCount();
+			 setCookie(textboxCookie, document.getElementById(textbox).value, {secure: false, 'max-age': 2592000});
 		 }
 
-		 /* function reset_text(){
-			var text_to_pimp = document.getElementById("mainTextbox");
-			text_to_pimp.style = "";
-			}
-		  */
+		 var timer;
+		 $("#mainTextbox").on("keydown mainTextbox", function(){
+			 var self = this;
+			 clearTimeout(timer)
+			 // prevent event from happening twice
+			 timer = setTimeout(function(){
+				 mainUpdate();
+			 },0);
+		 });
+
+
+
+		 // From https://javascript.info/cookie
+
+		 // returns the cookie with the given name,
+		 // or undefined if not found
+		 function getCookie(name) {
+			 let matches = document.cookie.match(new RegExp(
+				 "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+			 ));
+			 return matches ? decodeURIComponent(matches[1]) : undefined;
+		 }
+
+		 function setCookie(name, value, options = {}) {
+			 options = {
+				 path: '/',
+				 SameSite: 'lax',
+			 };
+
+			 if (options.expires instanceof Date) {
+				 options.expires = options.expires.toUTCString();
+			 }
+
+			 let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+			 for (let optionKey in options) {
+				 updatedCookie += "; " + optionKey;
+				 let optionValue = options[optionKey];
+				 if (optionValue !== true) {
+					 updatedCookie += "=" + optionValue;
+				 }
+			 }
+
+			 document.cookie = updatedCookie;
+		 }
+
+		 function deleteCookie(name) {
+			 setCookie(name, "", {
+				 'max-age': -1
+			 })
+		 }
 
 		</script>
 
